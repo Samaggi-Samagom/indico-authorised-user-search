@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='indico-authorised-user-search',
-    version='0.0.1-dev',
+    version='0.1.dev0',
     author='Samaggi Samagom',
     packages=find_packages(),
     install_requires=[
