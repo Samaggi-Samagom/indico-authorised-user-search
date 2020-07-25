@@ -45,3 +45,5 @@ jobs:
         script: |
           cd ~/plugins_dev/indico-authorised-user-search/
           git pull --ff-only
+          cd ~
+          touch ~/web/indico.wsgi
