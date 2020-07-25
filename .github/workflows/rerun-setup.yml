@@ -13,6 +13,7 @@ jobs:
         host: ${{ secrets.BOOM_INDICO_HOST }}
         username: ${{ secrets.BOOM_INDICO_USERNAME }}
         key: ${{ secrets.BOOM_INDICO_KEY }}
+        fingerprint: ${{ secrets.BOOM_INDICO_FINGERPRINT }}
         script: |
           source ~/.venv/bin/activate
           cd ~/plugins_dev/indico-authorised-user-search/
