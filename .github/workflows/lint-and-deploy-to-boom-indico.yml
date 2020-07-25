@@ -40,8 +40,8 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.BOOM_INDICO_HOST }}
-         username: ${{ secrets.BOOM_INDICO_USERNAME }}
-         key: ${{ secrets.BOOM_INDICO_KEY }}
-         script: |
-           cd ~/plugins_dev/indico-authorised-user-search/
-           git pull --ff-only
+        username: ${{ secrets.BOOM_INDICO_USERNAME }}
+        key: ${{ secrets.BOOM_INDICO_KEY }}
+        script: |
+          cd ~/plugins_dev/indico-authorised-user-search/
+          git pull --ff-only
