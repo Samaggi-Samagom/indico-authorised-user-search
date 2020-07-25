@@ -13,5 +13,4 @@ class AuthorisedUserSearchPlugin(IndicoPlugin):
 
     def init(self):
         super(AuthorisedUserSearchPlugin, self).init()
-        AuthorisedUserSearchPlugin.logger.info("Plugin Init")
-
+        AuthorisedUserSearchPlugin.logger.info("New3 Plugin Init")
