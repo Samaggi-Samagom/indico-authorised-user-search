@@ -2,6 +2,18 @@
 # See https://github.com/indico/indico/blob/master/indico/core/plugins/__init__.py#L48 for details
 # about the IndicoPlugin class.
 from indico.core.plugins import IndicoPlugin  # , IndicoPluginBlueprint, url_for_plugin
+import indico.modules.users.util
+from flask import session
+
+
+def add_monkey_patch(logger):
+
+    def authorised_search_users(**kwargs):
+        logger.info("session: {}".format(session))
+        raise Exception("Just wanna see the traceback")
+        indico.modules.users.util.search_users(**kwargs)
+
+    indico.modules.users.util.search_users = authorised_search_users
 
 
 class AuthorisedUserSearchPlugin(IndicoPlugin):
@@ -14,3 +26,4 @@ class AuthorisedUserSearchPlugin(IndicoPlugin):
     def init(self):
         super(AuthorisedUserSearchPlugin, self).init()
         AuthorisedUserSearchPlugin.logger.info("New3 Plugin Init")
+        add_monkey_patch(AuthorisedUserSearchPlugin.logger)

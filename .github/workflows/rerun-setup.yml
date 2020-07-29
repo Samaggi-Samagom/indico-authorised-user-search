@@ -19,3 +19,4 @@ jobs:
           cd ~/plugins_dev/indico-authorised-user-search/
           python setup.py develop
           deactivate
+          touch ~/web/indico.wsgi
