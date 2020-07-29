@@ -2,6 +2,7 @@
 # See https://github.com/indico/indico/blob/master/indico/core/plugins/__init__.py#L48 for details
 # about the IndicoPlugin class.
 from indico.core.plugins import IndicoPlugin  # , IndicoPluginBlueprint, url_for_plugin
+from indico.core.logger import Logger
 import indico.modules.users.util
 from flask import session
 
