@@ -6,7 +6,7 @@ from indico.core.plugins import IndicoPlugin  # , IndicoPluginBlueprint, url_for
 from indico.modules.groups.core import GroupProxy
 
 import indico.modules.users.util
-import indico.legacy.services.implementation.search.SearchUsers
+import indico.legacy.services.implementation.search
 
 from flask import session
 
@@ -53,13 +53,10 @@ def add_monkey_patch():
     old_search_users = indico.modules.users.util.search_users
     indico.modules.users.util.search_users = authorised_search_users
 
-    indico.legacy.services.implementation.SearchUsers = NewRPCSearchUsers
+    indico.legacy.services.implementation.search.methodMap["users"] = NewRPCSearchUsers
 
 
-old_rpc_search_users = indico.legacy.services.implementation.SearchUsers
-
-
-class NewRPCSearchUsers(old_rpc_search_users):
+class NewRPCSearchUsers(indico.legacy.services.implementation.search.SearchUsers):
 
     def _process_args(self):
         super(NewRPCSearchUsers)._process_args()
