@@ -4,7 +4,9 @@
 from indico.core.plugins import IndicoPlugin  # , IndicoPluginBlueprint, url_for_plugin
 # from indico.core.logger import Logger
 from indico.modules.groups.core import GroupProxy
+
 import indico.modules.users.util
+import indico.legacy.services.implementation.search.SearchUsers
 
 from flask import session
 
@@ -13,28 +15,29 @@ from wtforms.fields import IntegerField
 from wtforms.validators import InputRequired, NumberRange
 
 
+def get_user_search_permission():
+    """Check whether the current user is allowed to search users or not"""
+    if session.user.is_block:
+        return False
+
+    if session.user.is_admin:
+        return True
+
+    group_id = AuthorisedUserSearchPlugin.settings.get('group_id')
+    if group_id is None:
+        return True
+
+    group_id = int(group_id)
+    if 0 == group_id:
+        return True
+    elif group_id < 0:
+        return False
+    else:
+        group_proxy = GroupProxy(group_id)
+        return session.user in group_proxy
+
+
 def add_monkey_patch():
-
-    def get_user_search_permission():
-        """Check whether the current user is allowed to search users or not"""
-        if session.user.is_block:
-            return False
-
-        if session.user.is_admin:
-            return True
-
-        group_id = AuthorisedUserSearchPlugin.settings.get('group_id')
-        if group_id is None:
-            return True
-
-        group_id = int(group_id)
-        if 0 == group_id:
-            return True
-        elif group_id < 0:
-            return False
-        else:
-            group_proxy = GroupProxy(group_id)
-            return session.user in group_proxy
 
     def authorised_search_users(**kwargs):
         # logger = Logger.get("search_users")
@@ -46,8 +49,22 @@ def add_monkey_patch():
             return set([session.user])
 
     AuthorisedUserSearchPlugin.logger.info("adding monkey patch")
+
     old_search_users = indico.modules.users.util.search_users
     indico.modules.users.util.search_users = authorised_search_users
+
+    indico.legacy.services.implementation.SearchUsers = NewRPCSearchUsers
+
+
+old_rpc_search_users = indico.legacy.services.implementation.SearchUsers
+
+
+class NewRPCSearchUsers(old_rpc_search_users):
+
+    def _process_args(self):
+        super(NewRPCSearchUsers)._process_args()
+        if not get_user_search_permission():
+            self._event = None
 
 
 class AuthorisedGroupSettings(IndicoForm):
@@ -72,5 +89,5 @@ class AuthorisedUserSearchPlugin(IndicoPlugin):
 
     def init(self):
         super(AuthorisedUserSearchPlugin, self).init()
-        AuthorisedUserSearchPlugin.logger.info("New5 Plugin Init")
+        AuthorisedUserSearchPlugin.logger.info("New6 Plugin Init")
         add_monkey_patch()
