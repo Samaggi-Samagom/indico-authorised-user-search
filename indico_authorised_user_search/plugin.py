@@ -17,6 +17,11 @@ def add_monkey_patch():
 
     def get_user_search_permission():
         """Check whether the current user is allowed to search users or not"""
+        if session.user.is_block:
+            return False
+
+        if session.user.is_admin:
+            return True
 
         group_id = AuthorisedUserSearchPlugin.settings.get('group_id')
         if group_id is None:
@@ -25,11 +30,11 @@ def add_monkey_patch():
         group_id = int(group_id)
         if 0 == group_id:
             return True
-        elif group_id > 0:
+        elif group_id < 0:
+            return False
+        else:
             group_proxy = GroupProxy(group_id)
             return session.user in group_proxy
-        else:
-            return False
 
     def authorised_search_users(**kwargs):
         # logger = Logger.get("search_users")
