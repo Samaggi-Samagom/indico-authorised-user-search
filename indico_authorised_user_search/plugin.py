@@ -17,7 +17,7 @@ from wtforms.validators import InputRequired, NumberRange
 
 def get_user_search_permission():
     """Check whether the current user is allowed to search users or not"""
-    if session.user.is_block:
+    if session.user.is_blocked:
         return False
 
     if session.user.is_admin:
