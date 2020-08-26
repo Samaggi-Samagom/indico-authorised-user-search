@@ -16,8 +16,20 @@ from wtforms.validators import InputRequired, NumberRange
 def add_monkey_patch():
 
     def get_user_search_permission():
-        group_proxy = GroupProxy(AuthorisedUserSearchPlugin.settings.get('group_id'))
-        return session.user in group_proxy
+        """Check whether the current user is allowed to search users or not"""
+
+        group_id = AuthorisedUserSearchPlugin.settings.get('group_id')
+        if group_id is None:
+            return True
+
+        group_id = int(group_id)
+        if 0 == group_id:
+            return True
+        elif group_id > 0:
+            group_proxy = GroupProxy(group_id)
+            return session.user in group_proxy
+        else:
+            return False
 
     def authorised_search_users(**kwargs):
         # logger = Logger.get("search_users")
@@ -34,14 +46,17 @@ def add_monkey_patch():
 
 
 class AuthorisedGroupSettings(IndicoForm):
-    group_id = IntegerField('Local Group Id', [InputRequired(), NumberRange(min=1)])
+    group_id = IntegerField('Local Group Id', [InputRequired(), NumberRange(min=-1)])
 
 
 class AuthorisedUserSearchPlugin(IndicoPlugin):
     """Authorised User Search
 
-    Require the users to be authorised to use the user search functionality before they can perform
-    user searching
+    Only allow users in the specified local group to use the 'user search' functionality.
+    Users who are not in the specified group will only see themselves when they perform user
+    searching.
+
+    Specifying group_id=0 to allow everyone to search, and group_id=-1 to block everyone.
     """
 
     configurable = True
@@ -52,5 +67,5 @@ class AuthorisedUserSearchPlugin(IndicoPlugin):
 
     def init(self):
         super(AuthorisedUserSearchPlugin, self).init()
-        AuthorisedUserSearchPlugin.logger.info("New4 Plugin Init")
+        AuthorisedUserSearchPlugin.logger.info("New5 Plugin Init")
         add_monkey_patch()
