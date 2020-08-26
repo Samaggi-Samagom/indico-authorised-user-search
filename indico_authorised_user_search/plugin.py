@@ -1,4 +1,3 @@
-# from indico.core import signals
 # See https://github.com/indico/indico/blob/master/indico/core/plugins/__init__.py#L48 for details
 # about the IndicoPlugin class.
 from indico.core.plugins import IndicoPlugin  # , IndicoPluginBlueprint, url_for_plugin
@@ -40,15 +39,12 @@ def get_user_search_permission():
 def add_monkey_patch():
 
     def authorised_search_users(**kwargs):
-        # logger = Logger.get("search_users")
-        # logger.info("Session: {}".format(session))
-        # raise Exception("Just wanna see the traceback")
         if get_user_search_permission():
             return old_search_users(**kwargs)
         else:
             return set([session.user])
 
-    AuthorisedUserSearchPlugin.logger.info("adding monkey patch")
+    AuthorisedUserSearchPlugin.logger.info("Adding monkey patch")
 
     old_search_users = indico.modules.users.util.search_users
     indico.modules.users.util.search_users = authorised_search_users
@@ -86,5 +82,4 @@ class AuthorisedUserSearchPlugin(IndicoPlugin):
 
     def init(self):
         super(AuthorisedUserSearchPlugin, self).init()
-        AuthorisedUserSearchPlugin.logger.info("New6 Plugin Init")
         add_monkey_patch()
