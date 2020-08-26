@@ -67,11 +67,13 @@ class AuthorisedGroupSettings(IndicoForm):
 class AuthorisedUserSearchPlugin(IndicoPlugin):
     """Authorised User Search
 
-    Only allow users in the specified local group to use the 'user search' functionality.
-    Users who are not in the specified group will only see themselves when they perform user
+    Only allow users in the specified local group to search for other users.
+    Users who are not in the specified group will always see only themselves when they perform user
     searching.
 
-    Specify group_id=0 to allow everyone to search, and group_id=-1 to block everyone.
+    Specify group_id=0 to allow everyone, and group_id=-1 to block everyone.
+
+    Admins can always search for other users.
     """
 
     configurable = True
