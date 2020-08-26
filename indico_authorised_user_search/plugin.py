@@ -38,7 +38,7 @@ def add_monkey_patch():
         if get_user_search_permission():
             return old_search_users(**kwargs)
         else:
-            return set(session.user)
+            return set([session.user])
 
     AuthorisedUserSearchPlugin.logger.info("adding monkey patch")
     old_search_users = indico.modules.users.util.search_users
@@ -56,7 +56,7 @@ class AuthorisedUserSearchPlugin(IndicoPlugin):
     Users who are not in the specified group will only see themselves when they perform user
     searching.
 
-    Specifying group_id=0 to allow everyone to search, and group_id=-1 to block everyone.
+    Specify group_id=0 to allow everyone to search, and group_id=-1 to block everyone.
     """
 
     configurable = True
