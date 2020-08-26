@@ -59,7 +59,7 @@ def add_monkey_patch():
 class NewRPCSearchUsers(indico.legacy.services.implementation.search.SearchUsers):
 
     def _process_args(self):
-        super()._process_args()
+        super(NewRPCSearchUsers, self)._process_args()
         if not get_user_search_permission():
             self._event = None
 
