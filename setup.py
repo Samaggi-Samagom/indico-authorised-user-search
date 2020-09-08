@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='indico-authorised-user-search',
-    version='0.1.dev1',
+    version='0.1.0',
     author='Samaggi Samagom',
     author_email='tech@samaggisamagom.com',
     description='An Indico 2 plugin for allowing only users in a single group to search for other users',
